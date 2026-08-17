@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.0 (2026-08-17)
+
+### Added
+
+- **Automatic language detection**: `language` now accepts `auto` and is the new default, resolving the bill language from the document's `text.lang`
+- Alt text on the QR code and all layout icons, improving accessibility of the generated output
+
+### Changed
+
+- **Default language is no longer hard-coded to German.** With the new `auto` default, a document that sets `#set text(lang: "fr")` will render a French QR bill where it previously rendered German. Pass `language: "de"` explicitly to keep the old behavior.
+- The fallback for an unrecognized language is now German instead of English
+
 ## v0.4.1 (2025-11-23)
 
 ### Changed
