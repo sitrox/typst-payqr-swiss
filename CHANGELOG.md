@@ -1,6 +1,15 @@
 # Changelog
 
-## v0.5.0 (2026-08-17)
+## Unreleased
+
+### Added
+
+- New `print-billing-info` parameter (default `true`) to control whether `billing-info` is printed on the payment part
+
+### Fixed
+
+- **`billing-info` is now printed on the payment part.** It was encoded in the QR code but never rendered, although the Swiss Implementation Guidelines require every payment-relevant value in the QR code to be readable in plain text. It appears under the "Additional information" heading below `additional-info`, matching the reference images in `tests/muster`. Set `print-billing-info: false` to keep the previous output
+- Long billing strings wrap at their `/` separators instead of running out of the payment part
 
 ### Added
 
