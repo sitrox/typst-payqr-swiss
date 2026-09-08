@@ -106,6 +106,7 @@ The default language is the current text language (via `#set text(lang: "..."` a
 
 - When using a QR-IBAN, you must use reference type `QRR` with a valid QR reference (27 characters)
 - When using a regular IBAN, you must use either `SCOR` with a valid Creditor Reference (ISO 11649) or `NON` with no reference
+- With `NON`, pass no reference at all. `reference: none` and `reference: ""` are equivalent: the "Reference" heading is omitted from both the receipt and the payment part, as the guidelines require for an empty optional element
 
 ## Additional Information
 
