@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- An empty or whitespace-only `reference` no longer prints a bare "Reference" heading on the receipt and the payment part. The guidelines require the heading of an empty optional element to be omitted, so such a reference is now treated like `reference: none`
+
 ## v0.5.0 (2026-08-17)
 
 ### Added
