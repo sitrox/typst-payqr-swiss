@@ -278,11 +278,13 @@
         dx: 5mm,
         dy: 5mm,
         block(
-          width: 62mm,
+          // Information section of the receipt: 62mm less the 5mm margin on
+          // either side
+          width: 52mm,
           [
             #text(weight: "bold", size: 11pt)[#lang.receipt]
 
-            #set par(leading: 3pt)
+            #set par(leading: 3pt, justify: false)
             
             #text(weight: "bold", size: 6pt)[#lang.account-payable-to]
             #linebreak()
@@ -356,14 +358,16 @@
       // Payment part (right side)
       #place(
         top + left,
-        dx: 68mm,
+        dx: 67mm,
         dy: 5mm,
         block(
-          width: 148mm,
+          // Payment part: 148mm less the 5mm margin on either side, split into
+          // the 51mm payment part section and the 87mm information section
+          width: 138mm,
           [
             
             #grid(
-              columns: (55mm, auto),
+              columns: (51mm, 87mm),
               rows: (auto),
               
               // QR code
@@ -421,7 +425,7 @@
               block(
                 width: 100%,
                 [
-                  #set par(leading: 3pt)
+                  #set par(leading: 3pt, justify: false)
                   
                   #text(weight: "bold", size: 8pt)[#lang.account-payable-to]
                   #linebreak()
