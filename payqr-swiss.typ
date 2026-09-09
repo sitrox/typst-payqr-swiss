@@ -176,6 +176,8 @@
 
   let lang = languages.at(if language == auto {text.lang} else {language}, default: languages.de)
 
+  let reference-shown = reference != none and remove-whitespaces(reference) != ""
+
   let compliant-fonts = (
      "arial", "frutiger", "helvetica", "liberation sans"
   )
@@ -298,7 +300,7 @@
               text(size: 8pt)[#creditor-postal-code #creditor-city]
             }
             
-            #if reference != none {
+            #if reference-shown {
               text(weight: "bold", size: 6pt)[#lang.reference]
               linebreak()
               text(size: 8pt)[#format-reference(reference, reference-type)]
@@ -439,7 +441,7 @@
                     text(size: 10pt)[#creditor-postal-code #creditor-city]
                   }
                   
-                  #if reference != none {
+                  #if reference-shown {
                     text(weight: "bold", size: 8pt)[#lang.reference]
                     linebreak()
                     text(size: 9pt)[#format-reference(reference, reference-type)]
