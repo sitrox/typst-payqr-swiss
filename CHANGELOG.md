@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- New `receipt-value-size` and `payment-value-size` parameters, setting the font size of the values of the respective section between 8pt and 10pt. The headings follow 2pt smaller, as the style guide requires, and the defaults (8pt on the receipt, 10pt on the payment part) render as before. A smaller payment part leaves room for long addresses and additional information
+
 ## v0.5.0 (2026-08-17)
 
 ### Added

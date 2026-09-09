@@ -97,6 +97,8 @@ The default language is the current text language (via `#set text(lang: "..."` a
 | `language`             | Language code (de, fr, it, en)                   | No (de)     |
 | `standalone`           | Layout mode (false: floating, true: new page)    | No (false)  |
 | `font`                 | Font configuration (auto, page, or font name)    | No (auto)   |
+| `receipt-value-size`   | Font size of the values on the receipt           | No (8pt)    |
+| `payment-value-size`   | Font size of the values on the payment part      | No (10pt)   |
 
 \* Required if debtor information is provided  
 \*\* Required for QRR and SCOR reference types, must be omitted for NON
@@ -142,6 +144,19 @@ By default, the generator uses fonts that comply with Swiss QR bill specificatio
 **Spec-compliant fonts**: Arial, Frutiger, Helvetica, Liberation Sans
 
 **Note**: When using `font: "page"`, you're responsible for ensuring the chosen font meets Swiss QR bill compliance requirements for official use.
+
+## Font Sizes
+
+The style guide sets the font size of the values on the receipt to 8pt and recommends 10pt for the values on the payment part, with the headings in bold, 2pt smaller than the values they belong to and no smaller than 6pt. Those are the defaults; `receipt-value-size` and `payment-value-size` set them per section, between 8pt and 10pt:
+
+```typst
+#swiss-qr-bill(
+  // ... other parameters ...
+  payment-value-size: 8pt,  // headings drop to 6pt with it
+)
+```
+
+A smaller payment part buys room for long addresses or a long `additional-info`, at the price of legibility for readers that scan the visible section — the guidelines note that reading it works best at 8pt headings and 10pt values. The titles "Payment part" and "Receipt" are 11pt bold in every case, as the guidelines require.
 
 ## Examples
 

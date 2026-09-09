@@ -157,7 +157,9 @@
   billing-info: none,
   language: auto,  // auto (use text.lang with fallback to en), de, fr, it, or en
   standalone: false,  // false: floating element (default), true: force new page
-  font: "auto"  // "auto": use spec-compliant fonts, "page": inherit from page, or specify font name
+  font: "auto",  // "auto": use spec-compliant fonts, "page": inherit from page, or specify font name
+  receipt-value-size: 8pt,  // 8pt to 10pt, headings are set 2pt smaller
+  payment-value-size: 10pt  // 8pt to 10pt, headings are set 2pt smaller
 ) = context {
   // If amount = 0 then it's a bill with a blank field for the amount
   if (amount < 0.01 or amount > 999999999.99) and amount != 0 {
@@ -173,6 +175,24 @@
   if currency != "CHF" and currency != "EUR" {
     panic("Currency must be either CHF or EUR")
   }
+
+  // The style guide permits no font size below 6pt and none above 10pt for the
+  // headings and their values, and asks for the headings to be 2pt smaller than
+  // the values they belong to
+  if receipt-value-size < 8pt or receipt-value-size > 10pt {
+    panic("receipt-value-size must be between 8pt and 10pt")
+  }
+
+  if payment-value-size < 8pt or payment-value-size > 10pt {
+    panic("payment-value-size must be between 8pt and 10pt")
+  }
+
+  let receipt-heading-size = receipt-value-size - 2pt
+  let payment-heading-size = payment-value-size - 2pt
+
+  // A QR reference is the longest value on the payment part and is set one
+  // point smaller so that it keeps to a single line
+  let payment-reference-size = payment-value-size - 1pt
 
   let lang = languages.at(if language == auto {text.lang} else {language}, default: languages.de)
 
@@ -282,41 +302,41 @@
 
             #set par(leading: 3pt)
             
-            #text(weight: "bold", size: 6pt)[#lang.account-payable-to]
+            #text(weight: "bold", size: receipt-heading-size)[#lang.account-payable-to]
             #linebreak()
-            #text(size: 8pt)[#format-iban(account)]
+            #text(size: receipt-value-size)[#format-iban(account)]
             #linebreak()
-            #text(size: 8pt)[#creditor-name]
+            #text(size: receipt-value-size)[#creditor-name]
             #linebreak()
-            #text(size: 8pt)[#creditor-street #creditor-building]
+            #text(size: receipt-value-size)[#creditor-street #creditor-building]
             #linebreak()
             #if creditor-country != "CH" {
-              text(size: 8pt)[#creditor-country - #creditor-postal-code #creditor-city]
+              text(size: receipt-value-size)[#creditor-country - #creditor-postal-code #creditor-city]
             } else {
-              text(size: 8pt)[#creditor-postal-code #creditor-city]
+              text(size: receipt-value-size)[#creditor-postal-code #creditor-city]
             }
             
             #if reference != none {
-              text(weight: "bold", size: 6pt)[#lang.reference]
+              text(weight: "bold", size: receipt-heading-size)[#lang.reference]
               linebreak()
-              text(size: 8pt)[#format-reference(reference, reference-type)]
+              text(size: receipt-value-size)[#format-reference(reference, reference-type)]
             }
             
             
             #if debtor-name != "" {
-              text(weight: "bold", size: 6pt)[#lang.payable-by]
+              text(weight: "bold", size: receipt-heading-size)[#lang.payable-by]
               linebreak()
-              text(size: 8pt)[#debtor-name]
+              text(size: receipt-value-size)[#debtor-name]
               linebreak()
-              text(size: 8pt)[#debtor-street #debtor-building]
+              text(size: receipt-value-size)[#debtor-street #debtor-building]
               linebreak()
               if debtor-country != "CH" {
-                text(size: 8pt)[#debtor-country - #debtor-postal-code #debtor-city]
+                text(size: receipt-value-size)[#debtor-country - #debtor-postal-code #debtor-city]
               } else {
-                text(size: 8pt)[#debtor-postal-code #debtor-city]
+                text(size: receipt-value-size)[#debtor-postal-code #debtor-city]
               }
             } else {
-              text(weight: "bold", size: 8pt)[#lang.payable-by-name-address]
+              text(weight: "bold", size: receipt-value-size)[#lang.payable-by-name-address]
               v(-3mm)
               image("assets/receipt_payable_by.svg", height: 20mm, width: 52mm, alt: "receipt_payable_by")
             }
@@ -326,9 +346,9 @@
             #grid(
               columns: if amount == 0 { (13mm, auto) } else { (26mm, 26mm) },
               rows: 3mm,
-              text(weight: "bold", size: 6pt)[#lang.currency],
-              text(weight: "bold", size: 6pt)[#lang.amount],
-              text(size: 8pt)[#currency],
+              text(weight: "bold", size: receipt-heading-size)[#lang.currency],
+              text(weight: "bold", size: receipt-heading-size)[#lang.amount],
+              text(size: receipt-value-size)[#currency],
               if amount == 0 {
                 place(
                   dx: 9mm,
@@ -336,7 +356,7 @@
                   image("assets/receipt_amount.svg", height: 10mm, width: 30mm, alt: "receipt_amount")
                 )
               } else {
-                text(size: 8pt)[#format-currency(amount)]
+                text(size: receipt-value-size)[#format-currency(amount)]
               }
             )
             
@@ -345,7 +365,7 @@
             #place(
               right,
               dx: -8mm,
-              text(weight: "bold", size: 6pt)[#lang.acceptance-point]
+              text(weight: "bold", size: receipt-heading-size)[#lang.acceptance-point]
             )
           ]
         )
@@ -393,9 +413,9 @@
                         // So I give the currency half the official width and the amount the rest with margin.
                         columns: (23mm, 28mm),
                         rows: 3mm,
-                        text(weight: "bold", size: 8pt)[#lang.currency],
-                        text(weight: "bold", size: 8pt)[#lang.amount],
-                        text(size: 10pt)[#currency],
+                        text(weight: "bold", size: payment-heading-size)[#lang.currency],
+                        text(weight: "bold", size: payment-heading-size)[#lang.amount],
+                        text(size: payment-value-size)[#currency],
 
                         if amount == 0 {
                             place(
@@ -407,7 +427,7 @@
                               )
                             )
                         } else {
-                          text(size: 10pt)[#format-currency(amount)]
+                          text(size: payment-value-size)[#format-currency(amount)]
                         }
                       )
                     )
@@ -421,46 +441,46 @@
                 [
                   #set par(leading: 3pt)
                   
-                  #text(weight: "bold", size: 8pt)[#lang.account-payable-to]
+                  #text(weight: "bold", size: payment-heading-size)[#lang.account-payable-to]
                   #linebreak()
-                  #text(size: 10pt)[#format-iban(account)]
+                  #text(size: payment-value-size)[#format-iban(account)]
                   #linebreak()
-                  #text(size: 10pt)[#creditor-name]
+                  #text(size: payment-value-size)[#creditor-name]
                   #linebreak()
-                  #text(size: 10pt)[#creditor-street #creditor-building]
+                  #text(size: payment-value-size)[#creditor-street #creditor-building]
                   #linebreak()
                   #if creditor-country != "CH" {
-                    text(size: 10pt)[#creditor-country - #creditor-postal-code #creditor-city]
+                    text(size: payment-value-size)[#creditor-country - #creditor-postal-code #creditor-city]
                   } else {
-                    text(size: 10pt)[#creditor-postal-code #creditor-city]
+                    text(size: payment-value-size)[#creditor-postal-code #creditor-city]
                   }
                   
                   #if reference != none {
-                    text(weight: "bold", size: 8pt)[#lang.reference]
+                    text(weight: "bold", size: payment-heading-size)[#lang.reference]
                     linebreak()
-                    text(size: 9pt)[#format-reference(reference, reference-type)]
+                    text(size: payment-reference-size)[#format-reference(reference, reference-type)]
                   }
                    
                   #if additional-info != none {
-                    text(weight: "bold", size: 8pt)[#lang.additional-information]
+                    text(weight: "bold", size: payment-heading-size)[#lang.additional-information]
                     linebreak()
-                    text(size: 10pt)[#additional-info]
+                    text(size: payment-value-size)[#additional-info]
                   }
                   
                   #if debtor-name != "" {
-                    text(weight: "bold", size: 8pt)[#lang.payable-by]
+                    text(weight: "bold", size: payment-heading-size)[#lang.payable-by]
                     linebreak()
-                    text(size: 10pt)[#debtor-name]
+                    text(size: payment-value-size)[#debtor-name]
                     linebreak()
-                    text(size: 10pt)[#debtor-street #debtor-building]
+                    text(size: payment-value-size)[#debtor-street #debtor-building]
                     linebreak()
                     if debtor-country != "CH" {
-                      text(size: 10pt)[#debtor-country - #debtor-postal-code #debtor-city]
+                      text(size: payment-value-size)[#debtor-country - #debtor-postal-code #debtor-city]
                     } else {
-                      text(size: 10pt)[#debtor-postal-code #debtor-city]
+                      text(size: payment-value-size)[#debtor-postal-code #debtor-city]
                     }
                   } else {
-                    text(weight: "bold", size: 8pt)[#lang.payable-by-name-address]
+                    text(weight: "bold", size: payment-heading-size)[#lang.payable-by-name-address]
                     v(-3mm)
                     image("assets/payment_payable_by.svg", height: 25mm, width: 65mm, alt: "payment_payable_by")
                   }
