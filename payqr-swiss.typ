@@ -282,7 +282,7 @@
           [
             #text(weight: "bold", size: 11pt)[#lang.receipt]
 
-            #set par(leading: 3pt)
+            #set par(leading: 3pt, justify: false)
             
             #text(weight: "bold", size: 6pt)[#lang.account-payable-to]
             #linebreak()
@@ -423,7 +423,7 @@
               block(
                 width: 100%,
                 [
-                  #set par(leading: 3pt)
+                  #set par(leading: 3pt, justify: false)
                   
                   #text(weight: "bold", size: 8pt)[#lang.account-payable-to]
                   #linebreak()
