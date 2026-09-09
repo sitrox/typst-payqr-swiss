@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- **The receipt and the payment part now lay out their text in the sections the specification defines.** The receipt used the full 62mm of the receipt as its text width, and the payment part was a 148mm block placed at 68mm, so a long address crossed the perforation into the payment part and the payment part's information column ran 6mm past the right edge of the page. The receipt now uses the 52mm information section, and the payment part the 51mm payment part section plus the 87mm information section, starting at 67mm
+
 ## v0.5.0 (2026-08-17)
 
 ### Added
